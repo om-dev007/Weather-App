@@ -6,7 +6,7 @@ import axios from "axios";
 const WeatherAppUI = () => {
   const [userInput, setUserInput] = useState("New Delhi")
   const apikey = 'fc73db1a97cb4d63943123638252011'
-  const [data, setData] = useState([])
+  const [data, setData] = useState('')
   useEffect(() => {
     const getData = async () => {
       try {
@@ -15,7 +15,7 @@ const WeatherAppUI = () => {
       } catch(err) {
         console.log(err);
       } finally {
-        console.log(data);
+        
       }
     }
     getData()
