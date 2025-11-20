@@ -1,8 +1,5 @@
-import React, { useState } from "react";
+const SearchBar = ({userInput, setUserInput}) => {
 
-const SearchBar = () => {
-
-    const [userVal, setUserVal] = useState('New Delhi')
   return (
     <div
       style={{
@@ -21,11 +18,10 @@ const SearchBar = () => {
       <span style={{ fontSize: "18px" }}>🔍</span>
       <input
         onChange={(e) => {
-            setUserVal(e.target.value)
-            console.log(e.target.value);
+           setUserInput(e.target.value)
         }}
         type="text"
-        value={userVal}
+        value={userInput}
         placeholder="Search for a city..."
         style={{
           flex: 1,

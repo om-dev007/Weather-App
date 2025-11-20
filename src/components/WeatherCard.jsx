@@ -1,18 +1,28 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import InfoBox from "./InfoBox";
+import { useState } from "react";
 
-const WeatherCard = () => {
-    const [date, setDate] = useState(() => new Date())
-    useEffect(() => {
-        if(date) {
-            setDate(date.getDate())
-        }     
-        setDate(date.getTime())
+const WeatherCard = ({ data }) => {
+  const [date, setDate] = useState('')
+  const [time, settime] = useState('')
 
-        return () => {
-            setDate(date.getFullYear())
-        }
-    }, [])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date()
+      setDate(date.toLocaleTimeString())
+      settime(date.toLocaleDateString("en-US", { weekday: "long" }))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  if (!data || !data.location || !data.current) {
+    return (
+      <div className='flex justify-center items-center h-48'>
+        <div className='w-12 h-12 border-4 border-gray-300 border-t-gray-700 rounded-full animate-spin'></div>
+      </div>
+    )
+  }
+
   return (
     <div
       style={{
@@ -26,10 +36,9 @@ const WeatherCard = () => {
         backdropFilter: "blur(8px)",
       }}
     >
-      <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>City Name</h1>
-      <p style={{ opacity: 0.8 }}> {date.getDate()} </p>
+      <h1 style={{ fontSize: "32px", fontWeight: "bold" }}> {data.location.name} </h1>
+      <p style={{ opacity: 0.8 }}> {time} {date} </p>
 
-      {/* Weather Icon + Temperature */}
       <div
         style={{
           display: "flex",
@@ -40,10 +49,9 @@ const WeatherCard = () => {
         }}
       >
         <span style={{ fontSize: "60px" }}>⛅</span>
-        <span style={{ fontSize: "60px", fontWeight: "600" }}>21°C</span>
+        <span style={{ fontSize: "60px", fontWeight: "600" }}> {data.current.temp_c}°C</span>
       </div>
 
-      {/* 3 Info Boxes */}
       <div
         style={{
           display: "grid",
@@ -52,8 +60,8 @@ const WeatherCard = () => {
         }}
       >
         <InfoBox label="Precipitation" value="55%" />
-        <InfoBox label="Wind" value="18 km/h" />
-        <InfoBox label="Humidity" value="72%" />
+        <InfoBox label="Wind" value={data.current.wind_kph} />
+        <InfoBox label="Humidity" value={data.current.humidity} />
       </div>
     </div>
   );
