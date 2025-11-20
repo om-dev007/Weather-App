@@ -17,7 +17,7 @@ const WeatherAppUI = () => {
         setError(null);
 
         const rawData = await axios.get(
-          `http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${userInput}&aqi=yes`
+          `https://api.weatherapi.com/v1/current.json?key=${apikey}&q=${userInput}&aqi=yes`
         );
 
         setData(rawData.data);
