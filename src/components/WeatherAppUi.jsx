@@ -4,22 +4,39 @@ import WeatherCard from "./WeatherCard";
 import axios from "axios";
 
 const WeatherAppUI = () => {
-  const [userInput, setUserInput] = useState("New Delhi")
-  const apikey = 'fc73db1a97cb4d63943123638252011'
-  const [data, setData] = useState('')
+  const [userInput, setUserInput] = useState("New Delhi");
+  const apikey = "fc73db1a97cb4d63943123638252011";
+  const [data, setData] = useState("");
+  const [loading, setLoading] = useState(false);     // 👈 NEW
+  const [error, setError] = useState(null);          // 👈 NEW
+
   useEffect(() => {
     const getData = async () => {
       try {
-        const rawData = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${userInput}&aqi=yes`)
-        setData(rawData['data'])
-      } catch(err) {
+        setLoading(true);        // start loading
+        setError(null);          // reset error
+
+        const rawData = await axios.get(
+          `http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${userInput}&aqi=yes`
+        );
+
+        setData(rawData.data);
+      } catch (err) {
+        if(!userInput) {
+          setError("Please Enter City Name..")
+        }
+        else{
+          setError("Failed to fetch weather data");
+        }
+             
         console.log(err);
       } finally {
-        
+        setLoading(false);       // 👈 PERFECT USE
       }
-    }
-    getData()
-  }, [userInput])
+    };
+
+    getData();
+  }, [userInput]);
 
   return (
     <div
@@ -34,9 +51,21 @@ const WeatherAppUI = () => {
       }}
     >
       <SearchBar userInput={userInput} setUserInput={setUserInput} />
-      <WeatherCard data={data} />
+
+      {/* Show loading if needed */}
+      {loading &&
+        <div className='flex justify-center items-center h-48'>
+          <div className='w-12 h-12 border-4 border-gray-300 border-t-gray-700 rounded-full animate-spin'></div>
+        </div>
+      }
+
+      {/* Show error if needed */}
+      {error && <p className="mt-5 text-2xl font-light" style={{ color: "red" }}>{error}</p>}
+
+      {/* Show data only when loaded */}
+      {!loading && !error && <WeatherCard data={data} />}
     </div>
   );
-}
+};
 
-export default WeatherAppUI
+export default WeatherAppUI;
