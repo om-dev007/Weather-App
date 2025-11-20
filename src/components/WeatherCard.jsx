@@ -59,9 +59,9 @@ const WeatherCard = ({ data }) => {
           marginTop: "30px",
         }}
       >
-        <InfoBox label="Precipitation" value="55%" />
-        <InfoBox label="Wind" value={data.current.wind_kph} />
-        <InfoBox label="Humidity" value={data.current.humidity} />
+        <InfoBox label="Precipitation" value={data.current.precip_mm + " mm"} />
+        <InfoBox label="Wind" value={data.current.wind_kph + ' km/h'} />
+        <InfoBox label="Humidity" value={data.current.humidity + '%'} />
       </div>
     </div>
   );
